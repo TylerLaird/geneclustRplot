@@ -28,7 +28,7 @@ Gene_Arrow<-function(input,filetype='IMG',close.gene.setback=150,seed.value=1, l
   #lines(c(1,max(as.numeric(input$Scaffold.Length..bp.))),c(-5,-5) )
   
   max_min_diff=max(input$End.Coord)-min(input$Start.Coord)
-  text(c(seq(0,max(input$End.Coord),10^ceiling(log10(max_min_diff))/10   ) ), c(-arrow.width-5),
+  text(c(seq(0,max(input$End.Coord),10^ceiling(log10(max_min_diff))/10   ) ), c(-arrow.width-6),
        gsub('0000','0k',as.character(c(seq(0,max(input$End.Coord),10^ceiling(log10(max_min_diff))/10 )))), cex=0.8 )
   
   #text(c(seq(0,100000,10000)), c(-8), gsub('0000','0k',as.character(c(seq(0,100000,10000)))), cex=0.8 )

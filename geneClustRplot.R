@@ -21,7 +21,24 @@ Gene_Arrow<-function(input,filetype='IMG',close.gene.setback=150,seed.value=1, l
     Scaffold.Length..bp.<-max(End.Coord)
     Strand<- ifelse(grepl('location=complement\\(',headers), '-','+')
     input<-cbind.data.frame(Scaffold.Name,Gene.Product.Name,Start.Coord,End.Coord,Scaffold.Length..bp.,Strand)
-  }  
+  }
+  
+  if(filetype=='Genbank'){
+    genbank_file<-paste(readLines('/Users/Admin/Downloads/Pp1290_plasmid.gbk'), collapse='\n')
+    Scaffold.Name<-input
+    CDS<-str_replace_all(genbank_file, '\n|\\\\',' ')
+    CDS<-unlist(str_extract_all(CDS, 'CDS\\W.+?(?=CDS\\W.)'))
+    Gene.Product.Name<-str_extract(CDS,'(?<=product..).+(?=")')
+    Gene.Product.Name<-str_replace_all(Gene.Product.Name,'                     ',' ')
+    Gene.Product.Name<-str_replace_all(Gene.Product.Name,'\"','')
+    Gene.Product.Name<-str_replace_all(Gene.Product.Name,'  ',' ')
+    Start.Coord<-as.numeric(str_extract(CDS,'\\d+(?=\\.\\.)'))
+    End.Coord<-as.numeric(str_extract(CDS,'(?<=\\.\\.)\\d+') )
+    Scaffold.Length..bp.<-max(End.Coord)
+    Strand<- ifelse(grepl('complement',CDS), '-','+')
+    input<-cbind.data.frame(Scaffold.Name,Gene.Product.Name,Start.Coord,End.Coord,Scaffold.Length..bp.,Strand)
+  }
+  
   input<-input[order(input$Start.Coord),]
   plot(NA, xlim=c(1,max(as.numeric(input$End.Coord))), ylim=c(-10,200),axes=F, xlab=NA, ylab=NA)
   lines(c(1,max(as.numeric(input$Scaffold.Length..bp.))),c(0,0) )
